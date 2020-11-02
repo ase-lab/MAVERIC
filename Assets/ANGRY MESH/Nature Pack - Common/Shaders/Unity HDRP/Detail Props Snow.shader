@@ -81,12 +81,14 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 
 		
 
-		Tags { "RenderPipeline"="HDRenderPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
+		Tags { "RenderPipeline"="HDRenderPipeline" "RenderType"="Opaque" "Queue"="Geometry" "NatureRendererInstancing" = "True"}
 
 		HLSLINCLUDE
 		#pragma target 4.5
 		#pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 		#pragma multi_compile_instancing
+		#pragma instancing_options procedural:SetupNatureRenderer
+		#pragma multi_compile_local _ NATURE_RENDERER
 		#pragma instancing_options renderinglayer
 
 		struct GlobalSurfaceDescription // GBuffer Forward META TransparentBackface
@@ -356,6 +358,10 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
 			#endif
 
 			struct AttributesMesh
@@ -1042,6 +1048,10 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 				#define ASE_NEED_CULLFACE 1
 			#endif
 
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
+			#endif
+
 			struct AttributesMesh
 			{
 				float3 positionOS : POSITION;
@@ -1713,6 +1723,8 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 				#define ASE_NEED_CULLFACE 1
 			#endif
 
+			#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
+
 			struct AttributesMesh
 			{
 				float3 positionOS : POSITION;
@@ -2188,6 +2200,10 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
 			#endif
 
 			struct AttributesMesh
@@ -2681,6 +2697,10 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
 			#endif
 
 			struct AttributesMesh
@@ -3252,6 +3272,9 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 				#define ASE_NEED_CULLFACE 1
 			#endif
 
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
+			#endif
 
 			struct AttributesMesh
 			{
@@ -3916,6 +3939,10 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Detail Props Snow"
 
 			#if defined(_DOUBLESIDED_ON) && !defined(ASE_NEED_CULLFACE)
 				#define ASE_NEED_CULLFACE 1
+			#endif
+
+			#ifdef NATURE_RENDERER
+				#include "Assets/Visual Design Cafe/Nature Shaders/Common/Nodes/Integrations/Nature Renderer.cginc"
 			#endif
 
 			struct AttributesMesh
