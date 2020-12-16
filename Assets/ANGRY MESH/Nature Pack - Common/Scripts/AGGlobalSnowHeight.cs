@@ -11,7 +11,7 @@ public class AGGlobalSnowHeight : MonoBehaviour {
 
 	[Header("Global Snow Height")]
 	public float SnowMinimumHeight = -100.0f;
-	[Range(0.0f, 30.0f)]
+	[Range(0.0f, 5000.0f)]
 	public float SnowFadeHeight = 1.0f;
 
 //	[HideInInspector]

@@ -106,7 +106,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 3
   meteringMode:
     m_OverrideState: 0
     m_Value: 2
@@ -115,10 +115,10 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 13.5
   compensation:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   limitMin:
     m_OverrideState: 0
     m_Value: -10
@@ -178,13 +178,79 @@ MonoBehaviour:
   m_AdvancedMode: 0
   lift:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 0.96943754, y: 1, z: 0.97443205, w: 0.0086169755}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 0.9473549, y: 0.9631597, z: 1, w: -0.02585093}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0.5565856}
+    m_Value: {x: 0.9771831, y: 0.98822504, z: 1, w: 0.68584025}
+--- !u!114 &-907562766334371415
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa3b8214f75b354e9ba2caadd022259, type: 3}
+  m_Name: DepthOfField
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  quality:
+    m_OverrideState: 1
+    m_Value: 2
+  focusMode:
+    m_OverrideState: 1
+    m_Value: 1
+  focusDistance:
+    m_OverrideState: 1
+    m_Value: 10
+    min: 0.1
+  nearFocusStart:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  nearFocusEnd:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 0
+  farFocusStart:
+    m_OverrideState: 0
+    m_Value: 10
+    min: 0
+  farFocusEnd:
+    m_OverrideState: 0
+    m_Value: 20
+    min: 0
+  m_NearSampleCount:
+    m_OverrideState: 0
+    m_Value: 5
+    min: 3
+    max: 8
+  m_NearMaxBlur:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 0
+    max: 8
+  m_FarSampleCount:
+    m_OverrideState: 0
+    m_Value: 7
+    min: 3
+    max: 16
+  m_FarMaxBlur:
+    m_OverrideState: 0
+    m_Value: 8
+    min: 0
+    max: 16
+  m_HighQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 1
+  m_Resolution:
+    m_OverrideState: 0
+    m_Value: 2
 --- !u!114 &-893141059332930071
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -243,6 +309,7 @@ MonoBehaviour:
   - {fileID: -3309027846006510136}
   - {fileID: -7773035730199227921}
   - {fileID: -8814562226820639924}
+  - {fileID: -907562766334371415}
 --- !u!114 &1746643813387984256
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -261,30 +328,30 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 3
   threshold:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
     min: 0
   intensity:
-    m_OverrideState: 1
-    m_Value: 0.3
-    min: 0
-    max: 1
-  scatter:
     m_OverrideState: 1
     m_Value: 0.5
     min: 0
     max: 1
-  tint:
+  scatter:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.9328037, b: 0.8632076, a: 1}
+    m_Value: 0.2
+    min: 0
+    max: 1
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
   dirtTexture:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {fileID: 0}
   dirtIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
     min: 0
   anamorphic:

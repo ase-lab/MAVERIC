@@ -4350,11 +4350,11 @@ Shader "ANGRYMESH/Nature Pack/HDRP/Props Snow"
 				float4 tf = 1;
 				float tessValue = _TessValue; float tessMin = _TessMin; float tessMax = _TessMax;
 				float edgeLength = _TessEdgeLength; float tessMaxDisp = _TessMaxDisp;
-				#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
-				float3 cameraPos = 0;
-				#else
+				//#if (SHADEROPTIONS_CAMERA_RELATIVE_RENDERING != 0)
+				//float3 cameraPos = 0;
+				//#else
 				float3 cameraPos = _WorldSpaceCameraPos;
-				#endif
+				//#endif
 				#if defined(ASE_FIXED_TESSELLATION)
 				tf = FixedTess( tessValue );
 				#elif defined(ASE_DISTANCE_TESSELLATION)

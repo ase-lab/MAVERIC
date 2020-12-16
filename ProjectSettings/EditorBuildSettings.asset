@@ -9,9 +9,9 @@ EditorBuildSettings:
     path: Assets/HDRP Example/Scenes/samplescene.unity
     guid: cbfe36cfddfde964d9dfce63a355d5dd
   m_configObjects:
-    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: b06901d66d3fa17478141e00ba1ae27f,
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bc756e2e2a2b54246aacbeeff874de76,
       type: 2}
-    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: e1ccc5011d82df9489767978f205b331,
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 422cec4f67459b74b8f8bc442c496958,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: babe9f35d6ae731498c45e3457fa0d3d,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 5a593959b88c21b48a98f992df001b85,
       type: 2}
