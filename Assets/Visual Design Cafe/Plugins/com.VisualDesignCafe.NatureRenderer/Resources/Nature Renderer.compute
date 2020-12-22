@@ -19,6 +19,7 @@ float4 ReduceDensity;
 float4 CameraPosition;
 float4 CameraDirection;
 float SplitDistance;
+float CullDistance;
 AppendStructuredBuffer<CompressedFloat4x4> Result;
 AppendStructuredBuffer<CompressedFloat4x4> Result_Split;
 StructuredBuffer<CompressedFloat4x4> Instances;
@@ -236,7 +237,8 @@ void Add( uint id, StructuredBuffer<CompressedFloat4x4> buffer, uint count )
         Scale( m, scale ); 
     }
     
-    Result.Append( m );
+    if( distance < CullDistance )
+        Result.Append( m );
 
     if( distance < SplitDistance )
         Result_Split.Append( m );

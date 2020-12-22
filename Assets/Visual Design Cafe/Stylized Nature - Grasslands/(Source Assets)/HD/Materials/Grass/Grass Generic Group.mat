@@ -126,6 +126,7 @@ Material:
     - _DoubleSidedEnable: 1
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 0
+    - _EmissionIntensity: 0
     - _EnableFogOnTransparent: 1
     - _Float1: 0.1
     - _GlossMapScale: 1
@@ -133,6 +134,10 @@ Material:
     - _Glossiness1: 0.2
     - _GlossyReflections: 1
     - _Hue: 0
+    - _INTERACTION: 0
+    - _InteractionDuration: 1
+    - _InteractionPushDown: 1
+    - _InteractionStrength: 1
     - _Lightness: 0
     - _METALLICGLOSSMAP: 0
     - _METALLICGLOSSMAP1: 0
@@ -147,9 +152,11 @@ Material:
     - _OcclusionProbesStrength: 0.7058824
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _RecalculateWindNormals: 0.5
     - _ReceivesSSR: 0
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
+    - _SURFACE_MAP: 2
     - _Saturation: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0

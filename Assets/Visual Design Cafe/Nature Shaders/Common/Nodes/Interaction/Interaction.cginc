@@ -7,6 +7,7 @@
 #define NODE_INTERACTION_INCLUDED
 
 #include "../Common.cginc"
+#include "../../Nature Shaders.shadersettings"
 
 float4 _InteractionZonePosition;
 float4 _InteractionZoneSize;
@@ -92,13 +93,12 @@ void Interact(
 
     float4 data;
     float3 normal;
-    #define INTERACTION_SAMPLE_PIVOT
+    
     // Sample at either objectPivot or vertexWorldPosition.
-    // TODO: Add keyword to choose.
-    #ifdef INTERACTION_SAMPLE_PIVOT
-        SampleAverageInteractionData( objectPivot.xyz, data, normal );
-    #else
+    #ifdef _INTERACTION_ON_VERTEX
         SampleAverageInteractionData( vertexWorldPosition.xyz, data, normal );
+    #else
+        SampleAverageInteractionData( objectPivot.xyz, data, normal );
     #endif
 
     float fade = data.r - data.g;
@@ -119,12 +119,20 @@ void Interact(
                     * interactionStrength 
                     * overlap
                     * distanceFromEdge
-                - heightDifference 
+                - float3(0, heightDifference, 0)
                     * distanceFromEdge 
                     * interactionPushDown
                     * interactionStrength,
             vertexWorldPosition,
             objectPivot);
+
+    // Limit the amount that the grass can be pushed down 
+    // to prevent grass from going through the ground.
+    // We don't want the grass to completely disappear.
+    /* vertexWorldPosition.y = 
+        max(
+            vertexWorldPosition.y, 
+            objectPivot.y + 0.05 * mask); */
 
     vertex.xyz = TransformWorldToObject( vertexWorldPosition );
 }
@@ -141,17 +149,19 @@ void Interact_float(
     out float4 vertexOut, 
     out float3 vertexWorldPositionOut )
 {
-    #ifdef INTERACTION_ENABLED
+    #ifdef INTERACTION_SUPPORTED
         #if defined(_TYPE_GRASS) || defined(_TYPE_PLANT)
-            Interact(
-                vertex,
-                vertexWorldPosition,
-                objectPivot,
-                mask,
-                phaseOffset,
-                interactionDuration,
-                interactionStrength,
-                interactionPushDown);
+            #if defined(_INTERACTION_ON) || defined(_INTERACTION_ON_VERTEX)
+                Interact(
+                    vertex,
+                    vertexWorldPosition,
+                    objectPivot,
+                    mask,
+                    phaseOffset,
+                    interactionDuration,
+                    interactionStrength,
+                    interactionPushDown);
+            #endif
         #endif
     #endif
     vertexOut = vertex;

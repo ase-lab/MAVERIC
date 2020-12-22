@@ -139,7 +139,7 @@ half3 Translucency(
 		r.Occlusion = s.Occlusion;
 		r.Alpha = s.Alpha;
 
-		#if defined(POINT) || defined(POINT_COOKIE) || defined(SPOT)
+		#if defined(POINT) || defined(POINT_COOKIE) || defined(SPOT) || defined(_TRANSLUCENCY_OFF)
 			half3 translucency = half3(0,0,0);
 		#else
 			TranslucencyInput input;
@@ -181,56 +181,58 @@ half3 Translucency(
 	{
 		colorOut = color;
 
-		#if defined(_TYPE_GRASS) || defined(_TYPE_TREE_LEAVES) || defined(_TYPE_PLANT) || defined(_TYPE_TREE_BILLBOARD)
-			
-			#ifdef PROPERTY_ThicknessMap
-				float thickness = 
-					SAMPLE_TEXTURE2D(_ThicknessMap, sampler_ThicknessMap, varyings.texCoord0.xy).r;
-			#else
-				float thickness = 0;
-			#endif
-			
-			#ifdef PROPERTY_ThicknessRemap
-				thickness = Remap( thickness, _ThicknessRemap );
-			#endif
+		#ifndef _TRANSLUCENCY_OFF
+			#if defined(_TYPE_GRASS) || defined(_TYPE_TREE_LEAVES) || defined(_TYPE_PLANT) || defined(_TYPE_TREE_BILLBOARD)
+				
+				#ifdef PROPERTY_ThicknessMap
+					float thickness = 
+						SAMPLE_TEXTURE2D(_ThicknessMap, sampler_ThicknessMap, varyings.texCoord0.xy).r;
+				#else
+					float thickness = 0;
+				#endif
+				
+				#ifdef PROPERTY_ThicknessRemap
+					thickness = Remap( thickness, _ThicknessRemap );
+				#endif
 
-			TranslucencyInput input;
-			GetTranslucencyInput( thickness, input );
-			
-			half3 translucency = 
-				input.Scale > 0
-					? Translucency( 
-						input, 
-						inputData.bakedGI,
-						surfaceDescription.Albedo,
-						surfaceDescription.Normal, 
-						inputData.viewDirectionWS, 
-						GetMainLight(inputData.shadowCoord))
-					: half3(0,0,0);
-
-			/* // Disabled to improve performance.
-			#ifdef _ADDITIONAL_LIGHTS
-				uint pixelLightCount = GetAdditionalLightsCount();
-				for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
-				{
-					translucency += 
-						Translucency( 
+				TranslucencyInput input;
+				GetTranslucencyInput( thickness, input );
+				
+				half3 translucency = 
+					input.Scale > 0
+						? Translucency( 
 							input, 
 							inputData.bakedGI,
 							surfaceDescription.Albedo,
 							surfaceDescription.Normal, 
 							inputData.viewDirectionWS, 
-							GetAdditionalLight(lightIndex, inputData.positionWS));
-				}
-			#endif
-			*/
+							GetMainLight(inputData.shadowCoord))
+						: half3(0,0,0);
 
-			#if defined(_TYPE_GRASS)
-				float3 vertex = TransformWorldToObject(inputData.positionWS.xyz);
-				translucency *= saturate(vertex.y / GetObjectHeight());
-			#endif
+				/* // Disabled to improve performance.
+				#ifdef _ADDITIONAL_LIGHTS
+					uint pixelLightCount = GetAdditionalLightsCount();
+					for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
+					{
+						translucency += 
+							Translucency( 
+								input, 
+								inputData.bakedGI,
+								surfaceDescription.Albedo,
+								surfaceDescription.Normal, 
+								inputData.viewDirectionWS, 
+								GetAdditionalLight(lightIndex, inputData.positionWS));
+					}
+				#endif
+				*/
 
-			colorOut.rgb += Overlay(translucency.rgb, color.rgb);
+				#if defined(_TYPE_GRASS)
+					float3 vertex = TransformWorldToObject(inputData.positionWS.xyz);
+					translucency *= saturate(vertex.y / GetObjectHeight());
+				#endif
+
+				colorOut.rgb += Overlay(translucency.rgb, color.rgb);
+			#endif
 		#endif
 	}
 #endif

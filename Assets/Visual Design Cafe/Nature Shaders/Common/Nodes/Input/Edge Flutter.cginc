@@ -22,11 +22,7 @@ float GetEdgeFlutter(
         #if defined(_WIND_CONTROL_BAKED) && defined(_TYPE_TREE_LEAVES)
             return vertexColor.g;
         #else
-            #if defined(_WIND_CONTROL_UV)
-                return uv0.y;
-            #else
-                return 1;
-            #endif
+            return 1;
         #endif
     #endif
 }

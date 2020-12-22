@@ -151,6 +151,7 @@ Material:
     - _DoubleSidedEnable: 1
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 0
+    - _EmissionIntensity: 0
     - _EnableFogOnTransparent: 1
     - _FlatLighting: 0
     - _GlossMapScale: 1
@@ -176,6 +177,7 @@ Material:
     - _ReceivesSSR: 1
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
+    - _SURFACE_MAP: 2
     - _Saturation: 0.023
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0

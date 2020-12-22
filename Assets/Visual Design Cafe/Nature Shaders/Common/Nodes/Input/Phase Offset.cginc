@@ -25,12 +25,6 @@ float GetBranchPhaseOffset(
     #if defined(_WIND_CONTROL_BAKED)
         float edgeFlutter = saturate( (vertexColor.g - 0.5) * 2);
         return vertexColor.r;
-    #elif defined(_WIND_CONTROL_UV)
-        #if defined(_TYPE_TREE_BARK)
-            return 0;
-        #else
-            return randomOffset;
-        #endif
     #else
         #if defined(_TYPE_TREE_BARK)
             return 0;
@@ -54,8 +48,6 @@ float GetPhaseOffset(
     #else
         #ifdef _WIND_CONTROL_BAKED
             return ( 1.0 - vertexColor.g );
-        #elif _WIND_CONTROL_UV
-            return 0;
         #else
             return 0;
         #endif

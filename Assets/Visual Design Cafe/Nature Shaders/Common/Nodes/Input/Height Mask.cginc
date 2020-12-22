@@ -30,14 +30,6 @@ float GetHeightMask(
         #else
             return vertexColor.a;
         #endif
-    #elif defined(_WIND_CONTROL_UV)
-        #if defined(_TYPE_TREE_BARK)
-            return MaskFromHeightAndRadius( vertex, GetObjectHeight(), GetObjectRadius() );
-        #elif defined(_TYPE_TREE_LEAVES)
-            return max(uv0.y, MaskFromHeightAndRadius( vertex, GetObjectHeight(), GetObjectRadius() ));
-        #else
-            return uv0.y;
-        #endif
     #else
         #if defined(_TYPE_GRASS)
             return saturate( vertex.y / GetObjectHeight() );

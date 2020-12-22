@@ -1,3 +1,6 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
 // Copyright 2020 Visual Design Cafe. All rights reserved.
 // Package: Nature Shaders
 // Website: https://www.visualdesigncafe.com/nature-shaders
@@ -11,6 +14,8 @@
 /*
 float4 _PlayerPosition;
 */
+
+float _DoubleSidedNormalMode;
 
 float _Cutoff = 0.5;
 float _ObjectHeight;
@@ -74,20 +79,23 @@ struct Input
     float3 vertex;
     float3 worldPos;
     float noise;
+    float facing : VFACE;
 };
 
 #if defined(_TYPE_TREE_BILLBOARD)
     #include "Billboard.cginc"
 #endif
 
-#ifdef INTERACTION_ENABLED
+#ifdef INTERACTION_SUPPORTED
     #if defined(_TYPE_GRASS) || defined(_TYPE_PLANT)
-        float _InteractionDuration;
-        float _InteractionStrength;
-        float _InteractionPushDown;
+        #if defined(_INTERACTION_ON) || defined(_INTERACTION_ON_VERTEX)
+            float _InteractionDuration;
+            float _InteractionStrength;
+            float _InteractionPushDown;
 
-        #include "Nodes/Interaction/Interaction.cginc"
-        #include "Nodes/Input/Object Pivot.cginc"
+            #include "Nodes/Interaction/Interaction.cginc"
+            #include "Nodes/Input/Object Pivot.cginc"
+        #endif
     #endif
 #endif
 
@@ -106,6 +114,8 @@ void ApplyColorCorrection( inout float4 albedo, float noise )
 
 void NatureShaderVertex( inout appdata_full v, out Input o )
 {
+    o = (Input)0;
+
     #if defined(_TYPE_TREE_BILLBOARD)
         Billboard_float(
             v.vertex, 
@@ -141,21 +151,23 @@ void NatureShaderVertex( inout appdata_full v, out Input o )
         float heightMask = GetHeightMask( v.vertex.xyz, v.color, v.texcoord.xy, v.texcoord1.xy );
     #endif
 
-    #ifdef INTERACTION_ENABLED
+    #ifdef INTERACTION_SUPPORTED
         #if defined(_TYPE_GRASS) || defined(_TYPE_PLANT)
-            Interact( 
-                v.vertex, 
-                o.worldPos, 
-                GetObjectPivot(), 
-                heightMask,
-                GetPhaseOffset( 
-                    v.color, 
-                    v.texcoord,
-                    o.worldPos,
-                    GetObjectPivot() ),
-                _InteractionDuration,
-                _InteractionStrength,
-                _InteractionPushDown );
+            #if defined(_INTERACTION_ON) || defined(_INTERACTION_ON_VERTEX)
+                Interact( 
+                    v.vertex, 
+                    o.worldPos, 
+                    GetObjectPivot(), 
+                    heightMask,
+                    GetPhaseOffset( 
+                        v.color, 
+                        v.texcoord,
+                        o.worldPos,
+                        GetObjectPivot() ),
+                    _InteractionDuration,
+                    _InteractionStrength,
+                    _InteractionPushDown );
+            #endif
         #endif
     #endif
 
@@ -234,37 +246,35 @@ void NatureShaderVertex( inout appdata_full v, out Input o )
         o.Normal = UnpackScaleNormal( tex2D( _BumpMap, i.uv_Albedo ), _BumpScale ).xyz;
     #endif
 
-    // Mask Map
-    #ifdef _SURFACE_MAP_MASK
-        #ifdef _SURFACE_MAP_ON
-            float4 maskMap = tex2D(_MaskMap, i.uv_Albedo);
-            o.Metallic = maskMap.r;
-            o.Smoothness = Remap(maskMap.a, _GlossRemap);
-            o.Occlusion = Remap(maskMap.g, _OcclusionRemap);
+    // Surface Map
+    #if defined(_SURFACE_MAP_MASK)
+        float4 maskMap = tex2D(_MaskMap, i.uv_Albedo);
+        o.Metallic = maskMap.r;
+        o.Smoothness = Remap(maskMap.a, _GlossRemap);
+        o.Occlusion = Remap(maskMap.g, _OcclusionRemap);
+
+    #elif defined(_SURFACE_MAP_METALLIC_GLOSS)
+        float4 metallicGloss = tex2D( _MetallicGlossMap, i.uv_Albedo );
+        o.Metallic = metallicGloss.r;
+        o.Smoothness = Remap(metallicGloss.a, _GlossRemap);
+        #if defined(PROPERTY_OcclusionMap)
+            o.Occlusion = Remap(tex2D( _OcclusionMap, i.uv_Albedo ).g, _OcclusionRemap);
+        #else
+            o.Occlusion = 1;
+        #endif
+
+    #else
+        #ifdef PROPERTY_Metallic
+            o.Metallic = _Metallic;
         #else
             o.Metallic = 0;
+        #endif
+        #ifdef PROPERTY_Glossiness
+            o.Smoothness = _Glossiness;
+        #else
             o.Smoothness = 0.15;
-            o.Occlusion = 1;
         #endif
-    #else
-        #ifdef _SURFACE_MAP_ON
-            float4 metallicGloss = tex2D( _MetallicGlossMap, i.uv_Albedo );
-            float metallic = metallicGloss.r;
-            float glossiness = Remap(metallicGloss.a, _GlossRemap);
-        #else
-            float glossiness = _Glossiness;
-            float metallic = _Metallic;
-        #endif
-
-        o.Metallic = metallic;
-        o.Smoothness = glossiness;
-
-        #if defined(PROPERTY_OcclusionMap) && defined(_SURFACE_MAP_ON)
-            float occlusion = tex2D( _OcclusionMap, i.uv_Albedo ).g;
-            o.Occlusion = Remap(occlusion, _OcclusionRemap);
-        #else
-            o.Occlusion = 1;
-        #endif
+        o.Occlusion = 1;
     #endif
 
     // Translucency
@@ -291,6 +301,10 @@ void NatureShaderVertex( inout appdata_full v, out Input o )
         #else
             o.Emission = tex2D( _EmissionMap, i.uv_Albedo ).rgb;
         #endif
+    #endif
+
+    #ifdef PROPERTY_DoubleSidedNormalMode
+        o.Normal.z *= _DoubleSidedNormalMode > 0 ? i.facing : 1.0;
     #endif
 }
 
